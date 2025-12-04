@@ -1,5 +1,4 @@
-from nginx:alpine
-workdir /app
-copy . /usr/share/nginx/html
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
 EXPOSE 80
 
