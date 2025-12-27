@@ -1,0 +1,59 @@
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: translations
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data 
+      - ./app/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nt
+
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/translations
+    ports:
+      - 3001:3001
+    depends_on: 
+      - transaltor
+
+    networks:
+      - nt
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 8080:80
+
+  # transaltor:
+  #   image: libretranslate/libretranslate
+  #   ports:
+  #     - 5000:5000
+  #   networks:
+  #     - nt
+  transaltor:
+    image: libretranslate/libretranslate
+    container_name: transaltor-1
+    ports:
+      - 5000:5000
+    environment:
+      - CURL_CA_BUNDLE=""
+      - REQUESTS_CA_BUNDLE=""
+      - PYTHONHTTPSVERIFY=0
+    
+ 
+volumes:
+  postgres_data: {}
+
+networks:
+  nt:
+    driver: bridge
+
+
+   
