@@ -15,10 +15,12 @@ connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@db:5
 });
 
 
+const translatorHost = process.env.TRANSLATOR_HOST || 'translator';
 // פונקציית תרגום אמיתית דרך LibreTranslate API
 async function translateText(text, target) {
 try {
-const res = await fetch('http://translator:5000/translate', {
+const res = await fetch( `http://${translatorHost}:5000/translate`, {
+// const res = await fetch('http://translator:5000/translate', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ q: text, source: 'auto', target, format: 'text' })
