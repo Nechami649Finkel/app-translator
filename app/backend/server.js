@@ -2,10 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import pkg from 'pg';
+// import cors from 'cors';
 const { Pool } = pkg;
 
 
 const app = express();
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(cors());
 
