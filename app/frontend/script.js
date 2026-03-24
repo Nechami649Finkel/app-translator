@@ -12,10 +12,15 @@ if (!text) return;
 
 result.textContent = 'מתרגם...';
 try {
-const res = await fetch('http://localhost:3001/translate', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ text, target: target.value })
+const res = await fetch('/api/translate', {
+    method: 'POST',
+    headers: { 
+        'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify({ 
+        text, 
+        target: target.value 
+    })
 });
 const data = await res.json();
 result.textContent = data.translatedText;
@@ -27,9 +32,11 @@ result.textContent = 'שגיאה: ' + err.message;
 
 
 async function loadHistory() {
-const res = await fetch('http://localhost:3001/history');
-const data = await res.json();
-historyList.innerHTML = data.map(t => `<li>${t.source_text} → ${t.translated_text}</li>`).join('');
+    const res = await fetch('/api/history');
+    const data = await res.json();
+    historyList.innerHTML = data.map(t => 
+        <li>${t.source_text} → ${t.translated_text}</li>
+    ).join('');
 }
 
 

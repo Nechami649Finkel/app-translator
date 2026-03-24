@@ -6,5 +6,7 @@ from nginx:alpine
     ENV REQUESTS_CA_BUNDLE=/etc/ca-bundle.crt
     ENV SSL_CERT_FILE=/etc/ca-bundle.crt
     # --- END NETFREE CERT INTSALL ---
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 copy . /usr/share/nginx/html
 expose 80
+CMD ["nginx", "-g", "daemon off;"]
