@@ -1,0 +1,22 @@
+FROM node:18-alpine
+# #  ----- netfree---------
+# RUN apk add --no-cache ca-certificates wget && \
+#     wget http://netfree.link/dl/netfree-ca.crt -O /usr/local/share/ca-certificates/netfree-ca.crt && \
+#     update-ca-certificates
+
+# ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
+# # ----------NETFREE--------
+WORKDIR /app
+
+COPY package*.json .//
+
+RUN npm install 
+
+COPY . .
+
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+
+EXPOSE 3000
+
+CMD [ "node", "server.js" ]

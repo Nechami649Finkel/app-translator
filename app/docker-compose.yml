@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: translations
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nf
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/translations
+    ports:
+      - "3001:3001"
+    depends_on:
+      - translator
+    networks:
+      - nf
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 8080:80
+    networks:
+      - nf
+
+  translator:
+    image: libretranslate/libretranslate:latest
+    container_name: app-translator-1
+    ports:
+      - 5000:5000
+    networks:
+      - nf
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs:ro  # זה "מזריק" את התעודות של המכונה לתוך הקונטיינר
+    environment:
+      - LT_LOAD_ONLY=en,he
+      - LT_UPDATE_MODELS=false
+      - SSL_CERT_DIR=/etc/ssl/certs      # אומר לפייתון איפה לחפש את התעודות
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    
+
+volumes:
+  db-data:
+
+networks:
+  nf:
+    driver: bridge
