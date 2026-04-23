@@ -48,8 +48,8 @@ spec:
         kubernetes.io/hostname: minikube
       containers:
       - name: postgres
-        image: postgres:15-alpine
-        imagePullPolicy: IfNotPresent
+        image: postgres:15
+        imagePullPolicy: Never
         ports:
         - containerPort: 5432
         env:

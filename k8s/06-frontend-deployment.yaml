@@ -16,9 +16,25 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: app-frontend:latest
-        # imagePullPolicy: IfNotPresent
-        imagePullPolicy: Never
+        image: frontend:latest
+        imagePullPolicy: IfNotPresent
+        # imagePullPolicy: Never
+        livenessProbe:
+          httpGet: 
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds : 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+
+
+
 
         ports:
         - containerPort: 80

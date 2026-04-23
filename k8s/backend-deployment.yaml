@@ -16,10 +16,23 @@ spec:
     spec:
       containers:
       - name: backend
-        image: app-backend:latest
-        imagePullPolicy: IfNotPresent
+        image: backend:latest
+        imagePullPolicy: Never
         ports:
-        - containerPort: 3001      
+        - containerPort: 3001   
+        livenessProbe:
+          httpGet: 
+            path: /health
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds : 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3001
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 3
         env:
           - name: DATABASE_URL
             value: "postgres://postgres:postgres@postgres-service:5432/translations"
