@@ -3,7 +3,7 @@
 "type": "module",
 "scripts": {
 "start": "node server.js",
-"test": "node --test server.test.js"
+"test": "node --test unit-test.js"
 },
 "dependencies": {
 "cors": "^2.8.5",
