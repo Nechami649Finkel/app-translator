@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: translator
 spec:
-  replicas: 1
+  replicas: {{ .Values.translator.replicas }}
   selector:
     matchLabels:
       app: translator
@@ -14,22 +14,22 @@ spec:
     spec:
       containers:
       - name: translator
-        image: libretranslate/libretranslate:latest
+        image: {{ .Values.translator.image }}
         imagePullPolicy: Never
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "500m"
+            memory: {{ .Values.translator.resource.requests.memory | quote }}
+            cpu: {{ .Values.translator.resource.requests.cpu | quote }}
           limits:
-            memory: "4Gi"
-            cpu: "2000m"
+            memory: {{ .Values.translator.resource.limits.memory | quote }}
+            cpu: {{ .Values.translator.resource.limits.cpu | quote }}
         env:
         - name: LT_UPDATE_MODELS
           value: "false"
         - name: LT_OFFLINE
           value: "true" 
         ports:
-        - containerPort: 5000
+        - containerPort: {{ .Values.translator.port }}
         # livenessProbe:
         #   httpGet:
         #     path: /
@@ -58,7 +58,7 @@ spec:
     app: translator
   ports:
   - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    port: {{ .Values.translator.port }}
+    targetPort: {{ .Values.translator.port }}
 
     

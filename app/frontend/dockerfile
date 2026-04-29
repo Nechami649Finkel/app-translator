@@ -1,12 +1,18 @@
-from nginx:alpine
-# --- NETFREE CERT INTSALL ---
-    ADD https://netfree.link/dl/unix-ca.sh /home/netfree-unix-ca.sh 
-    RUN cat  /home/netfree-unix-ca.sh | sh
-    ENV NODE_EXTRA_CA_CERTS=/etc/ca-bundle.crt
-    ENV REQUESTS_CA_BUNDLE=/etc/ca-bundle.crt
-    ENV SSL_CERT_FILE=/etc/ca-bundle.crt
-    # --- END NETFREE CERT INTSALL ---
+from nginx:latest
+# # --- NETFREE CERT INTSALL ---
+#     ADD https://netfree.link/dl/unix-ca.sh /home/netfree-unix-ca.sh 
+#     RUN cat  /home/netfree-unix-ca.sh | sh
+#     ENV NODE_EXTRA_CA_CERTS=/etc/ca-bundle.crt
+#     ENV REQUESTS_CA_BUNDLE=/etc/ca-bundle.crt
+#     ENV SSL_CERT_FILE=/etc/ca-bundle.crt
+#     # --- END NETFREE CERT INTSALL ---
+    # העתקת התעודה של נטפרי לתוך ה-Image בזמן הבנייה
+COPY netfree.crt /usr/local/share/ca-certificates/netfree.crt
+# RUN apk add --no-cache ca-certificates && \
+#     update-ca-certificates
+RUN apt-get update && apt-get install -y ca-certificates && \
+    update-ca-certificates
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-copy . /usr/share/nginx/html
+copy . /usr/share/nginx/html/
 expose 80
 CMD ["nginx", "-g", "daemon off;"]
