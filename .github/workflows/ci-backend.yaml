@@ -13,9 +13,9 @@ on:
       - .github/workflows
 
 
-# jobs:
-#  unit-tests:
-#    name: run unit test
+jobs:
+ unit-tests:
+   name: run unit test
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v4
