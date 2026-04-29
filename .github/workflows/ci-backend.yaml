@@ -1,5 +1,5 @@
 
-name: ci/backend
+name: ci
 on:
   push:
     branches: [ci/cd, main]
