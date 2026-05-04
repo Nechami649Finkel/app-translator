@@ -71,11 +71,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./backend
+        working-directory: app/backend
         run: npm ci
 
       - name: Run unit tests
-        working-directory: ./backend
+        working-directory: app/backend
         run: npm test
 
       - name: Test summary
