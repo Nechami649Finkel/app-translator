@@ -18,11 +18,14 @@ spec:
         imagePullPolicy: Never
         resources:
           requests:
-            memory: {{ .Values.translator.resource.requests.memory | quote }}
-            cpu: {{ .Values.translator.resource.requests.cpu | quote }}
+            memory: {{ .Values.translator.resources.requests.memory | quote }}
+            cpu: {{ .Values.translator.resources.requests.cpu | quote }}
           limits:
-            memory: {{ .Values.translator.resource.limits.memory | quote }}
-            cpu: {{ .Values.translator.resource.limits.cpu | quote }}
+            memory: {{ .Values.translator.resources.limits.memory | quote }}
+            cpu: {{ .Values.translator.resources.limits.cpu | quote }}
+        volumeMounts: 
+          - name: translated-storage
+            mountPath: /home/libretranslate/.local
         env:
         - name: LT_UPDATE_MODELS
           value: "false"
@@ -30,6 +33,9 @@ spec:
           value: "true" 
         ports:
         - containerPort: {{ .Values.translator.port }}
+      volumes:
+      - name: translated-storage
+        emptyDir: {}
         # livenessProbe:
         #   httpGet:
         #     path: /

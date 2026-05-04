@@ -16,9 +16,8 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: {{ .Values.frontend.image }}
-        imagePullPolicy: IfNotPresent
-        port: {{ .Values.frontend.port }}
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        imagePullPolicy: {{ .Values.frontend.image.PullPolicy }}
         # imagePullPolicy: Never
         livenessProbe:
           httpGet: 

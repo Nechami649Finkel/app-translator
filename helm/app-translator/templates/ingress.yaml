@@ -16,7 +16,7 @@ spec:
           service:
             name: backend-service
             port:
-              number: {{ .Values.spec.port }}
+              number: {{ .Values.ingress.spec.port }}
       - path: /()(.*)
         pathType: ImplementationSpecific
         backend:

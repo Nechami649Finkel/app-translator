@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: init-sql-config
 data:
-  init.sql: {{ .Values.Volume.init.sql | indent 4 }}
+  init.sql: |
+{{ .Values.Volume.init.sql | indent 4 }}

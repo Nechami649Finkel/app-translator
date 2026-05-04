@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: {{ .Values.backend.image }}
-        imagePullPolicy: Never
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+        imagePullPolicy: {{ .Values.backend.image.PullPolicy }}
         ports:
         - containerPort: {{ .Values.backend.port }}   
         livenessProbe:

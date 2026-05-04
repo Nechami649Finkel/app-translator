@@ -1,12 +1,18 @@
 backend:
- image: app-backend:latest
+ image: 
+  repository: dornechami/app-backend
+  tag: "v1"
+  PullPolicy: IfNotPresent
  replicas: 2
  port: 3001
 
 frontend:
- image: frontend:latest
- replicas: 2
- port: 80
+  image: 
+    repository: dornechami/app-frontend
+    tag: "latest"
+    PullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
 
 translator:
  image: libretranslate/libretranslate:latest
@@ -26,7 +32,11 @@ database:
  password: cG9zdGdyZXM=
  storage: 10Gi
  replicas: 1
- image: postgres:15
+ image:
+  reposutory: dornechami/postgres
+  tag: "latest"
+  PullPolicy: Always
+
 
 
 ingress:
@@ -35,13 +45,13 @@ ingress:
  spec:
   port: 3001 
 
-volume:
-  data:
-  init.sql: |
-    CREATE TABLE IF NOT EXISTS translations (
-      id SERIAL PRIMARY KEY,
-      source_text TEXT NOT NULL,
-      target_lang VARCHAR(10) NOT NULL,
-      translated_text TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT now()
-    );
+Volume:
+  init:
+    sql: |
+      CREATE TABLE IF NOT EXISTS translations (
+        id SERIAL PRIMARY KEY,
+        source_text TEXT NOT NULL,
+        target_lang VARCHAR(10) NOT NULL,
+        translated_text TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT now()
+      );

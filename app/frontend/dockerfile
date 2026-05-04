@@ -15,4 +15,5 @@ RUN apt-get update && apt-get install -y ca-certificates && \
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 copy . /usr/share/nginx/html/
 expose 80
+
 CMD ["nginx", "-g", "daemon off;"]

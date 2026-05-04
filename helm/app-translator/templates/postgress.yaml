@@ -26,7 +26,7 @@ data:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Chart.name }}
+  name: {{.Chart.Name }}
 spec:
   serviceName: postgres-service
   replicas: {{ .Values.database.replicas }}
@@ -42,8 +42,8 @@ spec:
         kubernetes.io/hostname: minikube
       containers:
       - name: postgres
-        image: {{ .Values.database.image }}
-        imagePullPolicy: Never
+        image: {{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}
+        imagePullPolicy: {{ .Values.database.image.PullPolicy }}
         ports:
         - containerPort: 5432
         env:
@@ -79,7 +79,7 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: {{ Values.database.storage }}
+          storage: {{ .Values.database.storage }}
 ---
 apiVersion: v1
 kind: Service
