@@ -1,0 +1,19 @@
+# apiVersion: v2
+# name: app-translator
+# description: Application for translating text
+# type: application
+# version: 1.0.0
+# appVersion: "1.0.0"
+apiVersion: v2
+name: app-translator
+description: A Helm chart for App Translator - Exercise for students
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - translator
+  - kubernetes
+  - exercise
+maintainers:
+  - name: Nechami Finkel
+    email: n.finkel15@example.com
