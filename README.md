@@ -1,1 +1,1 @@
-![System Architecture](Architecture.png).
+
