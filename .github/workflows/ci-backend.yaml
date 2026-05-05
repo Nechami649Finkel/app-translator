@@ -73,7 +73,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: app/backend
-        run: npm ci
+        run: npm install
 
       - name: Run unit tests
         working-directory: app/backend
