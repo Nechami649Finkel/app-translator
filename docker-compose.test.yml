@@ -1,6 +1,6 @@
 services:
   backend-test:
-    build: ./backend
+    build: app/backend
     command: sh -c "sleep 5 && node --test server.integration.test.js"
     environment:
       DATABASE_URL: postgres://postgres:postgres@db-test:5432/translations_test
