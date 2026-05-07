@@ -1,32 +1,25 @@
-# יצירת הבאקט
 resource "aws_s3_bucket" "frontend" {
   bucket = "nechami-project-frontend-2026" 
 }
-
-# הגדרת הבאקט כאתר סטטי
 resource "aws_s3_bucket_website_configuration" "website_config" {
   bucket = aws_s3_bucket.frontend.id
-
   index_document {
     suffix = "index.html"
   }
-
   error_document {
     key = "index.html" 
   }
 }
 resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.frontend.id
-
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
-
 resource "aws_s3_bucket_policy" "public_read_access" {
   bucket = aws_s3_bucket.frontend.id
-
+  depeds_on = [aws_s3_bucket_public_access_block.public_access]
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
