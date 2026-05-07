@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: translator
+spec:
+  replicas: {{ .Values.translator.replicas }}
+  selector:
+    matchLabels:
+      app: translator
+  template:
+    metadata:
+      labels:
+        app: translator
+    spec:
+      containers:
+      - name: translator
+        image: {{ .Values.translator.image }}
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: {{ .Values.translator.resources.requests.memory | quote }}
+            cpu: {{ .Values.translator.resources.requests.cpu | quote }}
+          limits:
+            memory: {{ .Values.translator.resources.limits.memory | quote }}
+            cpu: {{ .Values.translator.resources.limits.cpu | quote }}
+        volumeMounts: 
+          - name: translated-storage
+            mountPath: /home/libretranslate/.local
+        env:
+        - name: LT_UPDATE_MODELS
+          value: "false"
+        - name: LT_OFFLINE
+          value: "true" 
+        ports:
+        - containerPort: {{ .Values.translator.port }}
+      volumes:
+      - name: translated-storage
+        emptyDir: {}
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 5000
+        #   initialDelaySeconds: 300
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 5
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 5000
+        #   initialDelaySeconds: 60
+        #   timeoutSeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 5
+      
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: translator-service
+spec:
+  selector:
+    app: translator
+  ports:
+  - protocol: TCP
+    port: {{ .Values.translator.port }}
+    targetPort: {{ .Values.translator.port }}
+
+    

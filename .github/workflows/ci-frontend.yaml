@@ -1,0 +1,51 @@
+
+name: ci-frontend
+
+on:
+  push:
+    branches: [main, ci/cd]
+    paths:
+      - 'app/frontend/**'
+      - '.github/workflows/ci-frontend.yaml'  
+
+  pull_request:
+    branches: [main, ci/cd]
+    paths:
+      - 'app/frontend/**'
+      - '.github/workflows/ci-frontend.yaml'
+
+permissions: 
+  id-token: write
+  contents: write 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+  
+
+        - name: Verify files
+          run: |
+            ls -la app/frontend/
+            echo "Frontend files verified"
+            name: ci-frontend
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+      - name: Terraform Apply
+        run: |
+          cd app/terraform
+          terraform init
+          terraform apply -auto-approve
+
+

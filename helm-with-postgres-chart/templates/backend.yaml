@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.backend.image }}
+        imagePullPolicy: Never
+        ports:
+        - containerPort: {{ .Values.backend.port }}   
+        livenessProbe:
+          httpGet: 
+            path: /health
+            port: {{ .Values.backend.port }}   
+          initialDelaySeconds: 10
+          periodSeconds : 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: {{ .Values.backend.port }}   
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          failureThreshold: 3
+        # env:
+        #   - name: DATABASE_URL
+        #     value: "postgres://postgres:postgres@postgres-service:5432/translations"
+        #   - name: TRANSLATOR_HOST
+        #     value: "translator-service"
+        value:
+          "postgres://{{ .Values.postgresql.auth.username }}:{{
+          .Values.postgresql.auth.password }}@{{ .Release.Name }}-postgresql:5432/{{
+          .Values.postgresql.auth.database }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: {{ .Values.backend.port }}   
+      targetPort: {{ .Values.backend.port }}   
+  type: ClusterIP

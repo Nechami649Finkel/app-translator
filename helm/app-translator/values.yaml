@@ -1,0 +1,55 @@
+backend:
+ image: 
+  repository: dornechami/app-backend
+  tag: "v1"
+  PullPolicy: IfNotPresent
+ replicas: 2
+ port: 3001
+
+frontend:
+  image: 
+    repository: dornechami/app-frontend
+    tag: "latest"
+    PullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
+
+translator:
+ image: libretranslate/libretranslate:latest
+ replicas: 1
+ port: 5000
+ resources:
+   requests:
+     memory: "1Gi"
+     cpu: "500m"
+   limits:
+     memory: "4Gi"
+     cpu: "2000m"
+
+database:
+ name: postgres-db
+ user: postgres
+ password: cG9zdGdyZXM=
+ storage: 10Gi
+ replicas: 1
+ image:
+  repository: dornechami/postgres
+  tag: "latest"
+  PullPolicy: IfNotPresent
+
+ingress:
+ enabled: true
+ host: translator.local
+ spec:
+  port: 3001 
+
+Volume:
+  init:
+    sql: |
+      CREATE TABLE IF NOT EXISTS translations (
+        id SERIAL PRIMARY KEY,
+        source_text TEXT NOT NULL,
+        target_lang VARCHAR(10) NOT NULL,
+        translated_text TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT now()
+      );

@@ -50,5 +50,15 @@ const r = await pool.query('SELECT source_text, translated_text FROM translation
 res.json(r.rows);
 });
 
+// בדיקה שהשרת למעלה (Liveness)
+app.get('/health', (req, res) => {
+    res.status(200).send('I am alive');
+});
+
+// בדיקה שהשרת מוכן לעבודה (Readiness)
+app.get('/ready', (req, res) => {
+    // פה אפשר בעתיד להוסיף בדיקה אם מסד הנתונים מחובר
+    res.status(200).send('I am ready');
+});
 
 app.listen(3001, () => console.log('✅ Backend running on http://localhost:3001'));

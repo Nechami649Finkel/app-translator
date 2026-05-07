@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        imagePullPolicy: {{ .Values.frontend.image.PullPolicy }}
+        # imagePullPolicy: Never
+        livenessProbe:
+          httpGet: 
+            path: /health
+            port: {{ .Values.frontend.port }}
+          initialDelaySeconds: 10
+          periodSeconds : 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: {{ .Values.frontend.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+  - port: {{ .Values.frontend.port }}
+    targetPort: {{ .Values.frontend.port }}
