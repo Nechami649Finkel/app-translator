@@ -1,1 +1,1 @@
-![Architecture Diagram](./images/Compose.png)
+![Architecture Diagram](./Compose.png)
