@@ -1,1 +1,1 @@
-![Architecture Diagram](.Diagrami/Pipeline.png)
+![Architecture Diagram](./Diagrami/Pipeline.png)
