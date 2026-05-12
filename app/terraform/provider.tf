@@ -9,15 +9,9 @@ terraform {
   backend "s3" {
     bucket = "nechami-s3-bucket"
     key    = "terraform.tfstate"
-    region = "us-east-1" # ודאי שזה זהה לשורה 11
+    region = "us-east-1" 
   }
 }
-
-provider "aws" {
-  region = "us-east-1" # האזור של המשאבים שאת יוצרת
-}
-}
-
 
 
 provider "aws" {
