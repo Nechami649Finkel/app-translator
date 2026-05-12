@@ -159,7 +159,7 @@ jobs:
           fetch-depth: 0
       - name: Fetch all tag
         run: git fetch --force --tags
-        name: Calculate next version
+      - name: Calculate next version
         id: version
         run: |
           LATEST_TAG=$(git tag -l "v*" --sort=-v:refname | head -n 1)
