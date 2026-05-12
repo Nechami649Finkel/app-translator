@@ -43,9 +43,10 @@ jobs:
           cd app/terraform
           terraform init
           terraform apply -auto-approve
-          
+
       - name: Deploy to S3
         run: |
           aws s3 sync app/frontend/ s3://nechami-project-frontend-2026 --delete
+
 
 
