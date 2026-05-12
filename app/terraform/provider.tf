@@ -10,16 +10,9 @@ terraform {
     bucket = "nechami-s3-bucket"
     key    = "terraform.tfstate"
     region = "us-east-1" 
+     dynamodb_table = "terraform-lock-table" 
   }
-  # Cerditional  DynamoDB
-  terraform {
-  backend "s3" {
-    bucket         = "nechami-s3-bucket"
-    key            = "terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-lock-table" # השם שנתת לטבלה
-  }
-}
+ 
 }
 
 
