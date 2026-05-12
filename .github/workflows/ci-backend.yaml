@@ -168,7 +168,7 @@ jobs:
             LATEST_TAG="v0.0.0"
           fi
         
-          # המשך הקוד לחילוץ הגרסה
+        
           VERSION=$(echo $LATEST_TAG | sed 's/v//')
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
