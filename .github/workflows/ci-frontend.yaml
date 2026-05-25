@@ -67,7 +67,6 @@ permissions:
   contents: write 
 
 jobs:
-
   build:
     name: Build Frontend
     runs-on: ubuntu-latest
