@@ -65,7 +65,8 @@ on:
 permissions: 
   id-token: write
   contents: write 
-
+  
+jobs:
   deploy-to-s3:
     name: Deploy to S3
     runs-on: ubuntu-latest
