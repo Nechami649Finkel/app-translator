@@ -97,7 +97,7 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync app/frontend/ s3://${{ secrets.nechami-project-frontend-2026 }}/ \
+          aws s3 sync app/frontend/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
             --delete \
             --exclude "*.test.js" \
             --exclude "Dockerfile" \
