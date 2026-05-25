@@ -77,7 +77,7 @@ jobs:
 
       - name: Verify files
         run: |
-          ls -la frontend/
+          ls -la app/frontend/
           echo "Frontend files verified"
   deploy-to-s3:
     name: Deploy to S3
