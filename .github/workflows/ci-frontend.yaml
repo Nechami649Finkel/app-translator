@@ -65,8 +65,20 @@ on:
 permissions: 
   id-token: write
   contents: write 
-  
+
 jobs:
+
+  build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify files
+        run: |
+          ls -la frontend/
+          echo "Frontend files verified"
   deploy-to-s3:
     name: Deploy to S3
     runs-on: ubuntu-latest
