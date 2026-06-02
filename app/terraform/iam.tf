@@ -42,7 +42,7 @@ resource "aws_iam_role_policy" "s3_access_policy" {
       {
         Effect   = "Allow"
         Action   = "cloudfront:CreateInvalidation"
-        Resource = aws_cloudfront_distribution.s3_distribution.arn
+        Resource = "*"
       }
     ]
   })
