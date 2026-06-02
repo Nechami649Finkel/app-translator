@@ -52,3 +52,4 @@ resource "aws_iam_role_policy" "s3_access_policy" {
     ]
   })
 }
+
