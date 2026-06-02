@@ -1,24 +1,20 @@
+global:
+  monitoringLabels:
+    monitoring: "true"
+    
 backend:
- image: app-backend:latest
+ image: dornechami/backend:v2
+ PullPolicy: IfNotPresent
  replicas: 2
  port: 3001
+
 
 frontend:
  image: frontend:latest
  replicas: 2
  port: 80
 
-# translator:
-#   image: libretranslate/libretranslate:latest
-#   replicas: 1
-#   port: 5000
-#   resources:
-#     requests:
-#       memory: "1Gi"
-#       cpu: "500m"
-#     limits:
-#       memory: "4Gi"
-#       cpu: "2000m"
+
 translator:
   image: libretranslate/libretranslate:latest
   replicas: 1

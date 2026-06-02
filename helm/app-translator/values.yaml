@@ -2,7 +2,7 @@ backend:
  image: 
   repository: dornechami/app-backend
   tag: "v1"
-  PullPolicy: IfNotPresent
+  PullPolicy: Always
  replicas: 2
  port: 3001
 
