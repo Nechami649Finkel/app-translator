@@ -50,6 +50,13 @@ jobs:
             --exclude ".dockerignore" \
             --exclude "nginx*.conf"
           echo "✅ Deployed to S3!"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+          echo "CloudFront cache cleared"
   terraform:
     runs-on: ubuntu-latest
     steps:
