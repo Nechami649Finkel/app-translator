@@ -1,21 +1,4 @@
-name: Cleanup Lock on Failure
-    if: failure()
-    run: |
-      echo "Terraform failed, cleaning up lock..."
-      # פקודה שמוחקת את השורה בטבלת ה-DynamoDB
-      aws dynamodb delete-item \
-        --table-name terraform-lock-table \
-        --key '{"LockID": {"S": "nechami-s3-bucket/terraform.tfstate-md5"}}'
-name: Cleanup Lock on Failure
-    if: failure()
-    run: |
-      echo "Terraform failed, cleaning up lock..."
-      # פקודה שמוחקת את השורה בטבלת ה-DynamoDB
-      aws dynamodb delete-item \
-        --table-name terraform-lock-table \
-        --key '{"LockID": {"S": "nechami-s3-bucket/terraform.tfstate-md5"}}'
-את/ה, עכשיו
-# 1. יצירת ה-OAC (ה"מפתח" שמאפשר ל-CloudFront לגשת ל-S3)
+# 1. יצירת OAC (Origin Access Control)
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "s3-oac"
   description                       = "OAC for S3 bucket"
@@ -31,24 +14,29 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   origin {
     domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
-    origin_id                = "myS3Origin"
+    origin_id                = "s3-frontend"
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
   }
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "myS3Origin"
+    target_origin_id = "s3-frontend"
 
     viewer_protocol_policy = "redirect-to-https"
+    
     forwarded_values {
       query_string = false
-      cookies { forward = "none" }
+      cookies {
+        forward = "none"
+      }
     }
   }
 
   restrictions {
-    geo_restriction { restriction_type = "none" }
+    geo_restriction {
+      restriction_type = "none"
+    }
   }
 
   viewer_certificate {
