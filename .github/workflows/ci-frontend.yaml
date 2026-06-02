@@ -59,6 +59,8 @@ jobs:
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
           echo "CloudFront cache cleared"
+
+          
   terraform:
     runs-on: ubuntu-latest
     steps:
