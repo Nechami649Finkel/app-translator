@@ -74,6 +74,11 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 sync app/frontend/ s3://nechami-project-frontend-2026 --delete
-
-
-
+      - name: Cleanup Lock on Failure
+        if: failure()
+        run: |
+          echo "Terraform failed, cleaning up lock..."
+          # פקודה שמוחקת את השורה בטבלת ה-DynamoDB
+          aws dynamodb delete-item \
+            --table-name terraform-lock-table \
+            --key '{"LockID": {"S": "nechami-s3-bucket/terraform.tfstate-md5"}}'
