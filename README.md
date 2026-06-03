@@ -1,1 +1,1 @@
-![Architecture Diagram](./Digarami/Pipeline With CloudFrontpng.png)
+![Architecture Diagram](Digarami/Pipeline%20With%20CloudFrontpng.png)
