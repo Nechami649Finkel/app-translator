@@ -35,7 +35,7 @@ async function loadHistory() {
     const res = await fetch('/api/history');
     const data = await res.json();
     historyList.innerHTML = data.map(t => 
-        <li>${t.source_text} → ${t.translated_text}</li>
+        `<li>${t.source_text} → ${t.translated_text}</li>`
     ).join('');
 }
 

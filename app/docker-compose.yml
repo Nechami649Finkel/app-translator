@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:15
+    container_name: DB 
     environment:
       POSTGRES_DB: translations
       POSTGRES_USER: postgres
@@ -9,33 +10,44 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - backend_network
+      - db_network
+      - Net_of_all
+      # - monitor_net
 
   backend:
     build: backend
+    container_name: backend
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/translations
+      TRANSLATOR_HOST: app-translator
     networks:
-      - backend_network
+      - frontend_network
       - translator_network
+      - db_network
+      - Net_of_all
+      # - monitor_net
     depends_on:
       - db
       - translator
 
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - 8080:80
     networks:
-      - backend_network
-
+      - frontend_network
+      - Net_of_all
+      # - monitor_net
   translator:
     image: libretranslate/libretranslate:latest
-    container_name: app-translator-1
+    container_name: app-translator
     ports:
       - 5000:5000
     networks:
-      - backend_network
+      - translator_network
+      - Net_of_all
+      # - monitor_net
     volumes:
       - /etc/ssl/certs:/etc/ssl/certs:ro  # זה "מזריק" את התעודות של המכונה לתוך הקונטיינר
     environment:
@@ -43,15 +55,69 @@ services:
       - LT_UPDATE_MODELS=false
       - SSL_CERT_DIR=/etc/ssl/certs      # אומר לפייתון איפה לחפש את התעודות
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+  # # --Monitor--
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - 9090:9090
+  #   networks:
+  #     - monitor_net
+  #   volumes:
+  #   - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   # הגדרות שיתחברו לכל ה-Exporters למטה
+
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - monitor_net
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
     
 
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor
+  #   container_name: cadvisor
+  #   ports:
+  #     - 8081:8080
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+    
+  #   networks:
+  #     - monitor_net
+  #   # זה מנטר את כל הקונטיינרים בבת אחת!
+
+  # postgres-exporter:
+  #   image: quay.io/prometheuscommunity/postgres-exporter
+  #   environment:
+  #     DATA_SOURCE_NAME: "postgresql://postgres:postgres@db:5432/translations?sslmode=disable" 
+  #   volumes:
+  #   - db-data:/var/lib/postgresql/data
 volumes:
   db-data:
+  # prometheus_data:
+  # grafana_data:
 
 networks:
-  backend_network:
+  frontend_network:
     driver: bridge
   db_network:
     driver: bridge
   translator_network:
+    driver: bridge 
+  Net_of_all:
     driver: bridge
+  # monitor_net:
+  #   driver: bridge
+
+
+
+
+ 
+  

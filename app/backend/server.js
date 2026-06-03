@@ -1,63 +1,71 @@
 import express from 'express';
 import cors from 'cors';
-import fetch from 'node-fetch';
 import pkg from 'pg';
+
 const { Pool } = pkg;
 
+// --- תוספת למטריקות (prom-client) ---
+import client from 'prom-client'; 
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
+// ------------------------------------
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 const pool = new Pool({
-connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@db:5432/translations'
+  connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@db:5432/translations'
 });
-
 
 const translatorHost = process.env.TRANSLATOR_HOST || 'translator';
-// פונקציית תרגום אמיתית דרך LibreTranslate API
+
+// פונקציית תרגום
 async function translateText(text, target) {
-try {
-const res = await fetch( `http://${translatorHost}:5000/translate`, {
-// const res = await fetch('http://translator:5000/translate', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ q: text, source: 'auto', target, format: 'text' })
-});
-const data = await res.json();
-return data.translatedText;
-} catch (err) {
-console.error('Translation error:', err);
-return '(שגיאה בתרגום)';
+  try {
+    const res = await fetch(`http://${translatorHost}:5000/translate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: text, source: 'auto', target, format: 'text' })
+    });
+    const data = await res.json();
+    return data.translatedText;
+  } catch (err) {
+    console.error('Translation error:', err);
+    return '(שגיאה בתרגום)';
+  }
 }
-}
 
+app.post('/api/translate', async (req, res) => {
+  const { text, target } = req.body;
+  if (!text || !target) return res.status(400).json({ error: 'Missing text or target' });
 
-app.post('/translate', async (req, res) => {
-const { text, target } = req.body;
-if (!text || !target) return res.status(400).json({ error: 'Missing text or target' });
-
-
-const translatedText = await translateText(text, target);
-await pool.query('INSERT INTO translations (source_text, target_lang, translated_text) VALUES ($1,$2,$3)', [text, target, translatedText]);
-res.json({ translatedText });
+  const translatedText = await translateText(text, target);
+  await pool.query('INSERT INTO translations (source_text, target_lang, translated_text) VALUES ($1,$2,$3)', [text, target, translatedText]);
+  res.json({ translatedText });
 });
 
-
-app.get('/history', async (req, res) => {
-const r = await pool.query('SELECT source_text, translated_text FROM translations ORDER BY id DESC LIMIT 10');
-res.json(r.rows);
+app.get('/api/history', async (req, res) => {
+  const r = await pool.query('SELECT source_text, translated_text FROM translations ORDER BY id DESC LIMIT 10');
+  res.json(r.rows);
 });
 
-// בדיקה שהשרת למעלה (Liveness)
+// --- ה-Endpoint החדש למטריקות של פרומתאוס ---
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', client.register.contentType);
+    res.end(await client.register.metrics());
+  } catch (ex) {
+    res.status(500).send(ex);
+  }
+});
+// -------------------------------------------
+
 app.get('/health', (req, res) => {
     res.status(200).send('I am alive');
 });
 
-// בדיקה שהשרת מוכן לעבודה (Readiness)
 app.get('/ready', (req, res) => {
-    // פה אפשר בעתיד להוסיף בדיקה אם מסד הנתונים מחובר
     res.status(200).send('I am ready');
 });
 
