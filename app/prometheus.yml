@@ -1,0 +1,30 @@
+# global:
+#   scrape_interval: 15s
+
+# scrape_configs:
+#   # ניטור כללי של הקונטיינרים דרך cAdvisor
+#   - job_name: 'docker-containers'
+#     static_configs:
+#       - targets: ['cadvisor:8081']
+
+#   # ניטור ה-Backend (בהנחה שהוספת לו endpoint של /metrics)
+#   - job_name: 'backend'
+#     metrics_path: '/metrics'
+#     static_configs:
+#       - targets: ['backend:3001']
+
+#   # ניטור הדאטה בייס דרך ה-Exporter שהגדרת
+#   - job_name: 'postgres'
+#     static_configs:
+#       - targets: ['DB:9187']
+
+#   - job_name: 'frontend'
+#     metrics_path: '/metrics'
+#     static_configs:
+#       - targets: ['frontend:80'] # או הפורט הפנימי שבו השרת שלך רץ בתוך הקונטיינר
+  
+#   - job_name: 'translator'
+#     static_configs:
+#       - targets: ['app-translator:5000']
+
+ 

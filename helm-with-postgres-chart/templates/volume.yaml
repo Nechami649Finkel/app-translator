@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-config
+  labels:
+    app: volume
+    monitoring: "true"
+data:
+  init.sql: {{ .Values.Volume.init.sql | indent 4 }}
+  

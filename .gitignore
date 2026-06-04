@@ -1,0 +1,11 @@
+# התעלמות מתיקיית החבילות
+node_modules/
+
+# התעלמות מקובצי לוג
+*.log
+
+# התעלמות מקבצים אישיים של VS Code
+.vscode/s
+
+**/.terraform/
+.tfstate
