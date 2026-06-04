@@ -209,7 +209,9 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd app-translator
+          cd /home/ubuntu/app-translator
           git pull
+          cd app
           docker compose up -d --build
           echo "Deployed successfully"
+          
