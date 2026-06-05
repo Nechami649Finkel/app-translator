@@ -2,4 +2,5 @@
 ![Architecture Diagram](./Compose.png)
 =======
 
-![Architecture Diagram](./Pipeline White Deploy.png)
+
+![Pipeline Architecture](Pipeline%20White%20Deploy.png)
