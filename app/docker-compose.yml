@@ -11,7 +11,7 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - db_network
-      - Net_of_all
+      # - Net_of_all
       # - monitor_net
 
   backend:
@@ -24,7 +24,7 @@ services:
       - frontend_network
       - translator_network
       - db_network
-      - Net_of_all
+      # - Net_of_all
       # - monitor_net
     depends_on:
       - db
@@ -37,7 +37,7 @@ services:
       - 8080:80
     networks:
       - frontend_network
-      - Net_of_all
+      # - Net_of_all
       # - monitor_net
   translator:
     image: libretranslate/libretranslate:latest
@@ -46,7 +46,7 @@ services:
       - 5000:5000
     networks:
       - translator_network
-      - Net_of_all
+      # - Net_of_all
       # - monitor_net
     volumes:
       - /etc/ssl/certs:/etc/ssl/certs:ro  # זה "מזריק" את התעודות של המכונה לתוך הקונטיינר
@@ -111,8 +111,8 @@ networks:
     driver: bridge
   translator_network:
     driver: bridge 
-  Net_of_all:
-    driver: bridge
+  # Net_of_all:
+  #   driver: bridge
   # monitor_net:
   #   driver: bridge
 
