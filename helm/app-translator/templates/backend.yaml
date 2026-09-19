@@ -13,6 +13,11 @@ spec:
     metadata:
       labels:
         app: backend
+        monitoring: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3001"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: backend
@@ -43,11 +48,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  labels:
+    app: backend
+    monitoring: "true"
 spec:
   selector:
     app: backend
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ .Values.backend.port }}   
       targetPort: {{ .Values.backend.port }}   
   type: ClusterIP
