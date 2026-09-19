@@ -15,7 +15,7 @@ spec:
       containers:
       - name: translator
         image: {{ .Values.translator.image }}
-        imagePullPolicy: Never
+        imagePullPolicy: {{ .Values.translator.pullPolicy | default "IfNotPresent" }}
         resources:
           requests:
             memory: {{ .Values.translator.resources.requests.memory | quote }}
@@ -26,16 +26,30 @@ spec:
         volumeMounts: 
           - name: translated-storage
             mountPath: /home/libretranslate/.local
+          - name: netfree-ca
+            mountPath: /etc/ssl/netfree
+            readOnly: true
         env:
         - name: LT_UPDATE_MODELS
-          value: "false"
+          value: "true"
         - name: LT_OFFLINE
-          value: "true" 
+          value: "false"
+        - name: LT_LOAD_ONLY
+          value: "en,he"
+        - name: SSL_CERT_FILE
+          value: /etc/ssl/netfree/ca-bundle.pem
+        - name: REQUESTS_CA_BUNDLE
+          value: /etc/ssl/netfree/ca-bundle.pem
+        - name: CURL_CA_BUNDLE
+          value: /etc/ssl/netfree/ca-bundle.pem 
         ports:
         - containerPort: {{ .Values.translator.port }}
       volumes:
       - name: translated-storage
         emptyDir: {}
+      - name: netfree-ca
+        configMap:
+          name: netfree-ca
         # livenessProbe:
         #   httpGet:
         #     path: /

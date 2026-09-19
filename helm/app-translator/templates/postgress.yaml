@@ -12,7 +12,7 @@ kind: ConfigMap
 metadata:
   name: db-config
 data:
-  POSTGRES_DB: {{ .Values.database.name }}
+  POSTGRES_DB: {{ .Values.database.dbName | default "translations" }}
   POSTGRES_USER: {{ .Values.database.user }}
 ---
 apiVersion: v1
@@ -38,8 +38,6 @@ spec:
       labels:
         app: postgres
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: minikube
       containers:
       - name: postgres
         image: {{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}

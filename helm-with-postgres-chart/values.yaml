@@ -17,6 +17,7 @@ frontend:
 
 translator:
   image: libretranslate/libretranslate:latest
+  pullPolicy: IfNotPresent
   replicas: 1
   port: 5000
   resources:
@@ -67,9 +68,6 @@ postgresql:
     persistence:
       enabled: true
       size: 10Gi
-
-    nodeSelector:
-      kubernetes.io/hostname: minikube
 
 ingress:
   enabled: true

@@ -10,7 +10,7 @@ const text = source.value.trim();
 if (!text) return;
 
 
-result.textContent = 'מתרגם...';
+result.textContent = '\u05DE\u05EA\u05E8\u05D2\u05DD...';
 try {
 const res = await fetch('/api/translate', {
     method: 'POST',
@@ -26,7 +26,7 @@ const data = await res.json();
 result.textContent = data.translatedText;
 loadHistory();
 } catch (err) {
-result.textContent = 'שגיאה: ' + err.message;
+result.textContent = '\u05E9\u05D2\u05D9\u05D0\u05D4: ' + err.message;
 }
 });
 

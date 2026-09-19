@@ -1,9 +1,9 @@
 backend:
  image: 
-  repository: dornechami/app-backend
-  tag: "v1"
-  PullPolicy: Always
- replicas: 2
+  repository: dornechami/app-translator-backend
+  tag: "latest"
+  PullPolicy: IfNotPresent
+ replicas: 1
  port: 3001
 
 frontend:
@@ -11,23 +11,25 @@ frontend:
     repository: dornechami/app-frontend
     tag: "latest"
     PullPolicy: IfNotPresent
-  replicas: 2
+  replicas: 1
   port: 80
 
 translator:
  image: libretranslate/libretranslate:latest
+ pullPolicy: IfNotPresent
  replicas: 1
  port: 5000
  resources:
    requests:
-     memory: "1Gi"
-     cpu: "500m"
+     memory: "512Mi"
+     cpu: "250m"
    limits:
-     memory: "4Gi"
-     cpu: "2000m"
+     memory: "1Gi"
+     cpu: "1000m"
 
 database:
  name: postgres-db
+ dbName: translations
  user: postgres
  password: cG9zdGdyZXM=
  storage: 10Gi
