@@ -15,7 +15,7 @@ spec:
       containers:
       - name: translator
         image: {{ .Values.translator.image }}
-        imagePullPolicy: Never
+        imagePullPolicy: {{ .Values.translator.pullPolicy | default "IfNotPresent" }}
         resources:
           requests:
             memory: {{ .Values.translator.resources.requests.memory | quote }}
